@@ -9,8 +9,12 @@ local canaccessvalue = canaccessvalue
 local issecrettable = issecrettable
 local canaccesstable = canaccesstable
 
+local function Chat(text)
+	print("|cffc4b5fdJoipov|r " .. ns.TITLE .. ": " .. tostring(text or ""))
+end
+
 function ns.Print(text)
-	JoipovAddons_Print(ns.TITLE, text)
+	Chat(text)
 end
 
 local function JoinArgs(...)
@@ -24,7 +28,7 @@ end
 
 function ns.Debug(...)
 	if ns.db and ns.db.debug then
-		JoipovAddons_Print(ns.TITLE, JoinArgs(...))
+		Chat(JoinArgs(...))
 	end
 end
 

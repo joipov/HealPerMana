@@ -47,6 +47,7 @@ end
 
 function handlers.PLAYER_LOGIN()
 	ns.InvalidateCache()
+	ns.Print("Type |cffffffff/hpm|r to toggle the list. |cffffffff/hpm settings|r opens settings.")
 end
 
 function handlers.SPELLS_CHANGED()

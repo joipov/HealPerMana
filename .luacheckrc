@@ -6,6 +6,7 @@ self = false
 exclude_files = {
 	".release/",
 	".annotations/",
+	"assets/",
 }
 
 files["tests/"] = {
@@ -49,8 +50,6 @@ read_globals = {
 	"TooltipUtil",
 
 	"CreateFrame",
-	"JoipovAddons_RegisterHint",
-	"JoipovAddons_Print",
 	"GetLocale",
 	"PlaySound",
 	"SOUNDKIT",

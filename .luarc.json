@@ -18,6 +18,7 @@
   ],
   "workspace.ignoreDir": [
     ".release",
+    "assets",
     "tests"
   ],
   "workspace.checkThirdParty": false,
@@ -26,9 +27,7 @@
     "SLASH_HPM2",
     "HealPerMana_OnAddonCompartmentClick",
     "HealPerManaDB",
-    "HealPickDB",
-    "JoipovAddons_RegisterHint",
-    "JoipovAddons_Print"
+    "HealPickDB"
   ],
   "diagnostics.severity": {
     "undefined-global": "Error",

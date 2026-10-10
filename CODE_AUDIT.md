@@ -254,3 +254,11 @@ No invented timings. Nothing here is labeled slow from appearance alone.
 - `UnitHealth` deficit fill
 - `ChatFrame_OpenChat` for macros
 - Ace / EllesmereUI hard dependency
+
+## 1.1.0 alignment
+
+Docs, TOC, and packaging now match the other Joipov addons. The rank list is unchanged.
+
+Checked with luacheck (Lua 5.1, explicit globals). SavedVariables, slash commands, and the compartment callback are the globals this addon writes.
+
+`assets/` is release media for CurseForge and Wago. It is not loaded by the TOC, not shipped in the zip, and not part of this audit.

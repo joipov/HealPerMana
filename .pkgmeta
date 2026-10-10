@@ -1,0 +1,16 @@
+package-as: HealPerMana
+
+# assets/ is CurseForge and Wago release media. It stays in git.
+# It is not unused, and it is not part of the addon zip.
+ignore:
+  - assets
+  - .annotations
+  - .github
+  - .cursor
+  - .luacheckrc
+  - .luarc.json
+  - tests
+  - CODE_AUDIT.md
+  - package.ps1
+
+manual-changelog: CHANGELOG.md

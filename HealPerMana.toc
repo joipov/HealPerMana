@@ -1,14 +1,15 @@
 ## Interface: 16001
 ## Title: |cffc4b5fdJoipov|r Heal Per Mana Table
 ## Notes: Priest heal ranks sorted by heal per mana.
-## Author: Heal Per Mana
-## Version: 1.1.0
+## Author: Joipov
+## Version: 1.1.1
+## Category: Combat
 ## SavedVariables: HealPerManaDB
 ## IconTexture: Interface\Icons\Spell_Holy_Heal
 ## AddonCompartmentFunc: HealPerMana_OnAddonCompartmentClick
+## X-License: All Rights Reserved
+## X-Website: https://github.com/joipov/HealPerMana
 ## AllowLoadGameType: camelot
-## Group: JoipovAddons
-## Dependencies: JoipovAddons
 
 Data.lua
 Locales\enUS.lua

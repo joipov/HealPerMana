@@ -60,10 +60,6 @@ function ns.InitOptions()
 	Settings.RegisterAddOnCategory(category)
 end
 
-if JoipovAddons_RegisterHint then
-	JoipovAddons_RegisterHint("Heal Per Mana Table", "/hpm settings")
-end
-
 _G.SLASH_HPM1 = "/hpm"
 _G.SLASH_HPM2 = "/healpermana"
 _G.SlashCmdList.HPM = function(msg)
