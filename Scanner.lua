@@ -1,26 +1,19 @@
 local _, ns = ...
 
--- Spellbook + catalog probe. Builds ns.spells. Cached until InvalidateCache.
+-- Spellbook + catalog probe. Each scan reads the client. Nothing is reused.
 
 local C_Spell = C_Spell
 local C_SpellBook = C_SpellBook
 local Enum = Enum
 
-local cache = {
-	spells = {},
-	byID = {},
-	familyNames = {},
-	valid = false,
-}
+local familyNames = {}
 
 function ns.InvalidateCache()
-	cache.valid = false
-	cache.spells = {}
-	cache.byID = {}
+	familyNames = {}
 end
 
 local function FamilyName(family)
-	local resolved = cache.familyNames[family.key]
+	local resolved = familyNames[family.key]
 	if resolved then
 		return resolved
 	end
@@ -35,11 +28,11 @@ local function FamilyName(family)
 	if firstID and C_Spell and C_Spell.GetSpellName then
 		local live = ns.ReadableString(C_Spell.GetSpellName(firstID))
 		if live then
-			cache.familyNames[family.key] = live
+			familyNames[family.key] = live
 			return live
 		end
 	end
-	return family.name
+	return nil
 end
 
 local function LookupFamilyByName(name)
@@ -82,7 +75,14 @@ local function KnownInBook(spellID)
 	return false
 end
 
-local function ReadCastSec(spellID, fallback)
+local function ReadName(spellID)
+	if C_Spell and C_Spell.GetSpellName then
+		return ns.ReadableString(C_Spell.GetSpellName(spellID))
+	end
+	return nil
+end
+
+local function ReadCastSec(spellID)
 	if C_Spell and C_Spell.GetSpellInfo then
 		local info = C_Spell.GetSpellInfo(spellID)
 		if ns.CanIndex(info) then
@@ -92,16 +92,16 @@ local function ReadCastSec(spellID, fallback)
 			end
 		end
 	end
-	return fallback
+	return nil
 end
 
-local function ReadMana(spellID, fallback)
+local function ReadMana(spellID)
 	if not (C_Spell and C_Spell.GetSpellPowerCost) then
-		return fallback
+		return nil
 	end
 	local costs = C_Spell.GetSpellPowerCost(spellID)
 	if type(costs) ~= "table" or not ns.CanIndex(costs) then
-		return fallback
+		return nil
 	end
 	local manaType = Enum and Enum.PowerType and Enum.PowerType.Mana
 	for i = 1, #costs do
@@ -116,18 +116,15 @@ local function ReadMana(spellID, fallback)
 			end
 		end
 	end
-	return fallback
+	return nil
 end
 
-local function ReadRank(spellID, fallback)
+local function ReadRank(spellID)
 	if C_Spell and C_Spell.GetSpellSubtext then
 		local sub = ns.ReadableString(C_Spell.GetSpellSubtext(spellID))
-		local rank = ns.ParseRankSubtext(sub)
-		if rank then
-			return rank
-		end
+		return ns.ParseRankSubtext(sub)
 	end
-	return fallback
+	return nil
 end
 
 local function ReadIcon(spellID)
@@ -139,55 +136,31 @@ local function ReadIcon(spellID)
 			end
 		end
 	end
-	return 135913
+	return nil
 end
 
-local function HealFromLiveOrCatalog(spellID, catalogEntry, family)
+local function ReadHeal(spellID)
 	local text, source = ns.FetchHealText(spellID)
 	local parsed = text and ns.ParseHealText(text)
 	if parsed then
-		local duration = parsed.duration
-		if family.kind == ns.KIND_HOT and not duration and catalogEntry then
-			duration = catalogEntry.hotDuration
-		end
-		return parsed.min, parsed.max, parsed.avg, duration, source
+		return parsed.min, parsed.max, parsed.avg, source
 	end
-	if catalogEntry then
-		local minH = catalogEntry.healMin
-		local maxH = catalogEntry.healMax
-		return minH, maxH, (minH + maxH) / 2, catalogEntry.hotDuration, "catalog"
-	end
-	return nil, nil, nil, nil, nil
+	return nil, nil, nil, nil
 end
 
-local function MakeSpell(spellID, family, rank, known, catalogEntry)
-	local name = FamilyName(family)
-	if C_Spell and C_Spell.GetSpellName then
-		local live = ns.ReadableString(C_Spell.GetSpellName(spellID))
-		if live then
-			name = live
-		end
-	end
-	local fallbackCast = catalogEntry and catalogEntry.castSec or 0
-	local fallbackMana = catalogEntry and catalogEntry.mana or 0
-	local fallbackRank = rank or (catalogEntry and catalogEntry.rank)
-	local minH, maxH, avg, duration, source = HealFromLiveOrCatalog(spellID, catalogEntry, family)
-	if not avg then
-		return nil
-	end
+local function MakeSpell(spellID, family, known)
+	local minH, maxH, avg, source = ReadHeal(spellID)
 	return {
 		id = spellID,
-		name = name,
+		name = ReadName(spellID),
 		familyKey = family.key,
 		kind = family.kind,
-		rank = fallbackRank or 0,
-		castSec = ReadCastSec(spellID, fallbackCast),
-		mana = ReadMana(spellID, fallbackMana),
+		rank = ReadRank(spellID),
+		castSec = ReadCastSec(spellID),
+		mana = ReadMana(spellID),
 		healMin = minH,
 		healMax = maxH,
 		healAvg = avg,
-		hotDuration = duration,
-		hotTicks = ns.HOT_TICKS,
 		icon = ReadIcon(spellID),
 		known = known and true or false,
 		source = source,
@@ -234,15 +207,13 @@ local function ScanSpellbook(list, byID)
 									local baseEntry = base and ns.CATALOG_BY_ID[base]
 									if baseEntry then
 										family = baseEntry.family
-										catalogEntry = catalogEntry or baseEntry
 									end
 								end
 								if not family and C_Spell and C_Spell.GetSpellName then
 									family = LookupFamilyByName(ns.ReadableString(C_Spell.GetSpellName(sid)))
 								end
 								if family then
-									local rank = ReadRank(sid, catalogEntry and catalogEntry.rank)
-									AddSpell(list, byID, MakeSpell(sid, family, rank, true, catalogEntry))
+									AddSpell(list, byID, MakeSpell(sid, family, true))
 								end
 							end
 						end
@@ -259,10 +230,23 @@ local function ProbeCatalog(list, byID)
 		if not byID[entry.id] then
 			local known = KnownInBook(entry.id)
 			if known or (ns.db and ns.db.showUnlearned) then
-				AddSpell(list, byID, MakeSpell(entry.id, entry.family, entry.rank, known, entry))
+				AddSpell(list, byID, MakeSpell(entry.id, entry.family, known))
 			end
 		end
 	end
+end
+
+local function RankBefore(a, b)
+	if a == b then
+		return false
+	end
+	if a == nil then
+		return false
+	end
+	if b == nil then
+		return true
+	end
+	return a < b
 end
 
 local function SortSpells(list)
@@ -271,25 +255,19 @@ local function SortSpells(list)
 			return a.familyKey < b.familyKey
 		end
 		if a.rank ~= b.rank then
-			return a.rank < b.rank
+			return RankBefore(a.rank, b.rank)
 		end
 		return a.id < b.id
 	end)
 end
 
 function ns.ScanSpells()
-	if cache.valid then
-		return cache.spells
-	end
 	local list = {}
 	local byID = {}
-	cache.familyNames = {}
+	familyNames = {}
 	ScanSpellbook(list, byID)
 	ProbeCatalog(list, byID)
 	SortSpells(list)
-	cache.spells = list
-	cache.byID = byID
-	cache.valid = true
 	ns.spells = list
 	ns.Debug("scanned", #list, "ranks")
 	return list

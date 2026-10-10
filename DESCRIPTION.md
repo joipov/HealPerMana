@@ -13,4 +13,4 @@ Unlearned ranks stay hidden unless you turn them on in settings. The addon compa
 Open with `/hpm settings`, or Esc > Options > AddOns > Heal Per Mana Table.
 
 *   **Enable** — master switch. Off hides the list.
-*   **Show unlearned ranks** — off by default. Grey rows for catalog ranks that are not in your spellbook yet.
+*   **Show unlearned ranks** — off by default. Grey rows for heal ranks that are not in your spellbook yet.

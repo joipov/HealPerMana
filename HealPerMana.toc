@@ -1,9 +1,9 @@
 ## Interface: 16001
-## Title: |cffc4b5fdJoipov|r Heal Per Mana Table
+## Title: Heal Per Mana Table
 ## Notes: Priest heal ranks sorted by heal per mana.
 ## Author: Joipov
-## Version: 1.1.1
-## Category: Combat
+## Version: 1.1.2
+## Category: |cffc4b5fdJoipov|r Tools
 ## SavedVariables: HealPerManaDB
 ## IconTexture: Interface\Icons\Spell_Holy_Heal
 ## AddonCompartmentFunc: HealPerMana_OnAddonCompartmentClick

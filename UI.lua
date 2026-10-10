@@ -65,26 +65,38 @@ local function ClickSound()
 end
 
 local function FormatCast(sec)
-	if not sec or sec <= 0 then
+	if type(sec) ~= "number" then
+		return ns.L.NA
+	end
+	if sec <= 0 then
 		return ns.L.INSTANT
 	end
 	return string.format("%.1f", sec)
 end
 
 local function FormatHeal(spell)
-	if not spell.healMin then
-		return "-"
+	if type(spell.healMin) ~= "number" or type(spell.healMax) ~= "number" then
+		return ns.L.NA
 	end
-	local text
 	if spell.healMin == spell.healMax then
-		text = tostring(math.floor(spell.healMin + 0.5))
-	else
-		text = math.floor(spell.healMin + 0.5) .. "-" .. math.floor(spell.healMax + 0.5)
+		return tostring(math.floor(spell.healMin + 0.5))
 	end
-	if spell.source == "catalog" then
-		text = text .. " " .. ns.L.EST
+	return math.floor(spell.healMin + 0.5) .. "-" .. math.floor(spell.healMax + 0.5)
+end
+
+local function FormatMana(mana)
+	if type(mana) ~= "number" then
+		return ns.L.NA
 	end
-	return text
+	return tostring(mana)
+end
+
+local function FormatHPM(spell)
+	local hpm = ns.HealPerMana(spell)
+	if hpm == nil then
+		return ns.L.NA
+	end
+	return string.format("%.2f", hpm)
 end
 
 local function SavePosition()
@@ -155,18 +167,27 @@ local function PaintRow(row, spell, alt)
 	else
 		row.bg:SetColorTexture(0.10, 0.10, 0.12, 0.95)
 	end
-	row.icon:SetTexture(spell.icon)
-	row.name:SetText(spell.name)
+	if spell.icon then
+		row.icon:SetTexture(spell.icon)
+		row.icon:Show()
+	else
+		row.icon:Hide()
+	end
+	row.name:SetText(spell.name or ns.L.NA)
 	if spell.known then
 		Color(row.name, TEXT)
 	else
 		Color(row.name, MUTED)
 	end
-	row.rank:SetText(spell.rank and spell.rank > 0 and tostring(spell.rank) or "-")
+	if type(spell.rank) == "number" then
+		row.rank:SetText(tostring(spell.rank))
+	else
+		row.rank:SetText(ns.L.NA)
+	end
 	row.cast:SetText(FormatCast(spell.castSec))
-	row.mana:SetText(tostring(spell.mana or 0))
+	row.mana:SetText(FormatMana(spell.mana))
 	row.heal:SetText(FormatHeal(spell))
-	row.hpm:SetText(string.format("%.2f", ns.HealPerMana(spell)))
+	row.hpm:SetText(FormatHPM(spell))
 end
 
 local function UpdateTable(spells)

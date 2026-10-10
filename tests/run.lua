@@ -156,7 +156,9 @@ local gh1 = { id = 2060, name = "Greater Heal", rank = 1, castSec = 3, mana = 37
 test("HealPerMana is heal / mana", function()
 	near(ns.HealPerMana(flash4), 426 / 215)
 	near(ns.HealPerMana(heal3), 643 / 305)
-	eq(ns.HealPerMana({ mana = 0, healAvg = 100 }), 0)
+	eq(ns.HealPerMana({ mana = 0, healAvg = 100 }), nil)
+	eq(ns.HealPerMana({ healAvg = 100 }), nil)
+	eq(ns.HealPerMana(nil), nil)
 end)
 
 test("SortSpellsBy HPM descending puts Greater Heal first", function()
@@ -171,6 +173,26 @@ test("SortSpellsBy mana ascending", function()
 	ns.SortSpellsBy(list, "mana", true)
 	eq(list[1].id, 9474)
 	eq(list[3].id, 2060)
+end)
+
+test("SortSpellsBy puts a missing heal per mana last", function()
+	local missing = { id = 1, name = "Lesser Heal", rank = 1 }
+	local list = { missing, heal3, gh1 }
+	ns.SortSpellsBy(list, "hpm", false)
+	eq(list[1].id, 2060)
+	eq(list[3].id, 1)
+	ns.SortSpellsBy(list, "hpm", true)
+	eq(list[3].id, 1)
+end)
+
+test("SortSpellsBy keeps a live cast of 0 and puts a missing cast last", function()
+	local instant = { id = 139, name = "Renew", rank = 1, castSec = 0, mana = 30, healAvg = 45 }
+	local missingCast = { id = 2054, name = "Heal", rank = 1, mana = 10, healAvg = 20 }
+	local list = { heal3, missingCast, instant }
+	ns.SortSpellsBy(list, "cast", true)
+	eq(list[1].id, 139)
+	eq(list[2].id, 6063)
+	eq(list[3].id, 2054)
 end)
 
 test("MacroText is a mouseover macro", function()

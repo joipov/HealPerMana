@@ -26,7 +26,7 @@ Loaded in TOC order; modules communicate only through the shared `ns` table.
 
 | File | Concern |
 | --- | --- |
-| `Data.lua` | Families and catalog fallbacks |
+| `Data.lua` | Families and spell IDs |
 | `Locales/enUS.lua` | UI strings |
 | `Locales.lua` | Locale fallback |
 | `Secrets.lua` | Secret-value guards |

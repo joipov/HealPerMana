@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.1.2
+
+Heal, mana, cast, and rank come from the client each time the list is drawn.
+
+### Changed
+
+- A value the client does not return shows N/A.
+- Opening or sorting the list reads the client again.
+- The addon list groups this under Joipov Tools. The list name has no Joipov prefix.
+
+### Removed
+
+- Stored Classic heal, mana, and cast numbers.
+
 ## 1.1.1
 
 Heal Per Mana loads on its own. Chat lines no longer go through another addon.
