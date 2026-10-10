@@ -7,7 +7,7 @@
 ## SavedVariables: HealPerManaDB
 ## IconTexture: Interface\Icons\Spell_Holy_Heal
 ## AddonCompartmentFunc: HealPerMana_OnAddonCompartmentClick
-## X-License: All Rights Reserved
+## X-License: MIT
 ## X-Website: https://github.com/joipov/HealPerMana
 ## AllowLoadGameType: camelot
 
