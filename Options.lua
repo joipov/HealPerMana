@@ -58,25 +58,32 @@ function ns.InitOptions()
 		if onChanged then
 			setting:SetValueChangedCallback(onChanged)
 		end
-		return Settings.CreateCheckbox(category, setting, tooltip)
+		local checkbox = Settings.CreateCheckbox(category, setting, tooltip)
+		return checkbox, setting
 	end
 
-	AddCheckbox("enabled", L.ENABLE:format(ns.TITLE), L.ENABLE_TIP, true, function()
+	local enabledCheckbox, enabledSetting = AddCheckbox("enabled", L.ENABLE:format(ns.TITLE), L.ENABLE_TIP, true, function()
 		if not ns.db.enabled and ns.mainFrame then
 			ns.mainFrame:Hide()
 		end
 	end)
-	AddCheckbox("showMinimapButton", L.SHOW_MINIMAP, L.SHOW_MINIMAP_TIP, true, function()
+	local minimapCheckbox = AddCheckbox("showMinimapButton", L.SHOW_MINIMAP, L.SHOW_MINIMAP_TIP, true, function()
 		if ns.UpdateMinimapButton then
 			ns.UpdateMinimapButton()
 		end
 	end)
-	AddCheckbox("showUnlearned", L.SHOW_UNLEARNED, L.SHOW_UNLEARNED_TIP, false, function()
+	local unlearnedCheckbox = AddCheckbox("showUnlearned", L.SHOW_UNLEARNED, L.SHOW_UNLEARNED_TIP, false, function()
 		ns.InvalidateCache()
 		if ns.mainFrame and ns.mainFrame:IsShown() then
 			ns.RefreshUI()
 		end
 	end)
+
+	local function MasterEnabled()
+		return enabledSetting:GetValue()
+	end
+	minimapCheckbox:SetParentInitializer(enabledCheckbox, MasterEnabled)
+	unlearnedCheckbox:SetParentInitializer(enabledCheckbox, MasterEnabled)
 
 	Settings.RegisterAddOnCategory(category)
 end

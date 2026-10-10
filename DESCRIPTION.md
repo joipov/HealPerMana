@@ -13,5 +13,5 @@ Unlearned ranks stay hidden unless you turn them on in settings. The minimap but
 Open with `/hpm settings`, the minimap button, the addon compartment, or Esc > Options > AddOns > Heal Per Mana Table.
 
 *   **Enable** — master switch. Off hides the list.
-*   **Minimap Button** — on by default. Opens these settings. Ellesmere places it with the other addon buttons.
+*   **Minimap button** — on by default. Opens these settings. Ellesmere places it with the other addon buttons.
 *   **Show unlearned ranks** — off by default. Grey rows for heal ranks that are not in your spellbook yet.

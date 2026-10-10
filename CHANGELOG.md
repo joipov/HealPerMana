@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.1.4
+
+Settings use the same wording as the other Joipov addons.
+
+### Changed
+
+- **Enable Heal Per Mana Table** says it shows the heal rank window.
+- **Minimap button** is sentence case.
+- The other rows grey out while the addon is off.
+
 ## 1.1.3
 
 The minimap button is on by default. The addon compartment opens settings.

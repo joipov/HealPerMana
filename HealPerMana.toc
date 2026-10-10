@@ -2,7 +2,7 @@
 ## Title: Heal Per Mana Table
 ## Notes: Priest heal ranks sorted by heal per mana.
 ## Author: Joipov
-## Version: 1.1.3
+## Version: 1.1.4
 ## Category: |cffc4b5fdJoipov|r Tools
 ## SavedVariables: HealPerManaDB
 ## OptionalDeps: LibStub, LibDataBroker-1.1, LibDBIcon-1.0
