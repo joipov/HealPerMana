@@ -58,7 +58,7 @@ local function Validate(db)
 	db.x = ClampNumber(db.x, -2000, 2000, 0)
 	db.y = ClampNumber(db.y, -2000, 2000, 0)
 	db.minimapAngle = ClampNumber(db.minimapAngle, -360, 360, defaults.minimapAngle)
-	db.showMinimapButton = db.showMinimapButton ~= false
+	db.showMinimapButton = db.showMinimapButton == true
 	if type(db.minimapIcon) ~= "table" then
 		db.minimapIcon = {}
 	end
@@ -104,4 +104,5 @@ function ns.LoadDB(saved)
 end
 
 ns.DB_DEFAULTS = defaults
+ns.defaults = defaults
 ns.DB_VERSION = DB_VERSION

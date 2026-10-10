@@ -262,3 +262,13 @@ Docs, TOC, and packaging now match the other Joipov addons. The rank list is unc
 Checked with luacheck (Lua 5.1, explicit globals). SavedVariables, slash commands, and the compartment callback are the globals this addon writes.
 
 `assets/` is release media for CurseForge and Wago. It is not loaded by the TOC, not shipped in the zip, and not part of this audit.
+
+## Practices (2026-10-10)
+
+Checked against the Joipov house style and against Warcraft Wiki secret values plus the Ketho WoW API library in `.luarc.json`.
+
+The event frame was already a handler table. `ADDON_LOADED` already unregisters itself. Rescans already use one coalesced `C_Timer.After`. There is no `OnUpdate`.
+
+This pass exports `ns.defaults` as an alias of `ns.DB_DEFAULTS`. After `CopyDefaults` fills a missing boolean, `showMinimapButton` is kept only when it is `true`, matching the other addons.
+
+Left alone: tooltip parsing, rank selection, and the open compatibility notes above.
