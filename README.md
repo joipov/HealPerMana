@@ -9,7 +9,7 @@ Target client: World of Warcraft **Forever** (`camelot`, TOC `## Interface: 1600
 - One row per known heal rank: spell, rank, cast time, mana, heal, and heal per mana.
 - Click a column header to sort. Click a row to fill a `/cast Spell(Rank N)` line (Ctrl+C). The addon never opens chat.
 - Unlearned ranks can be shown from settings. They stay out of the list by default.
-- Addon compartment toggles the list. `/hpm settings` opens the settings panel.
+- Addon compartment and the minimap button open settings. `/hpm` toggles the list. `/hpm settings` opens the settings panel.
 
 ## Commands
 
@@ -31,6 +31,7 @@ Loaded in TOC order; modules communicate only through the shared `ns` table.
 | `Locales.lua` | Locale fallback |
 | `Secrets.lua` | Secret-value guards |
 | `Database.lua` | SavedVariables defaults, migrations, validation |
+| `MinimapButton.lua` | LibDBIcon launcher or built-in button |
 | `Parse.lua` | Tooltip and description heal extract |
 | `Scanner.lua` | Spellbook scan |
 | `Recommender.lua` | Heal per mana and sort |

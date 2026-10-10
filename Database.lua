@@ -5,6 +5,8 @@ local _, ns = ...
 
 local defaults = {
 	enabled = true,
+	showMinimapButton = true,
+	minimapAngle = 160,
 	showUnlearned = false,
 	debug = false,
 	sortKey = "hpm",
@@ -25,7 +27,7 @@ local allowedSort = {
 }
 
 -- Bump when a one-time migration is added to MigrateDB.
-local DB_VERSION = 2
+local DB_VERSION = 3
 
 local function CopyDefaults(db)
 	for key, value in pairs(defaults) do
@@ -55,6 +57,11 @@ local function Validate(db)
 	end
 	db.x = ClampNumber(db.x, -2000, 2000, 0)
 	db.y = ClampNumber(db.y, -2000, 2000, 0)
+	db.minimapAngle = ClampNumber(db.minimapAngle, -360, 360, defaults.minimapAngle)
+	db.showMinimapButton = db.showMinimapButton ~= false
+	if type(db.minimapIcon) ~= "table" then
+		db.minimapIcon = {}
+	end
 	if type(db.point) ~= "string" or db.point == "" then
 		db.point = defaults.point
 	end
@@ -80,6 +87,10 @@ local function MigrateDB(db)
 		for i = 1, #leftover do
 			db[leftover[i]] = nil
 		end
+	end
+	if version < 3 then
+		-- The button starts on. Existing saves did not have the key.
+		db.showMinimapButton = true
 	end
 	db.version = DB_VERSION
 end

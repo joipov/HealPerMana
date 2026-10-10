@@ -14,7 +14,23 @@ function ns.OpenSettings()
 end
 
 function _G.HealPerMana_OnAddonCompartmentClick()
-	ns.ToggleMainFrame()
+	ns.OpenSettings()
+end
+
+function _G.HealPerMana_OnAddonCompartmentEnter(_, owner)
+	if not GameTooltip then
+		return
+	end
+	GameTooltip:SetOwner(owner or UIParent, "ANCHOR_LEFT")
+	GameTooltip:AddLine(ns.TITLE)
+	GameTooltip:AddLine(ns.L.CLICK_SETTINGS, 1, 1, 1)
+	GameTooltip:Show()
+end
+
+function _G.HealPerMana_OnAddonCompartmentLeave()
+	if GameTooltip then
+		GameTooltip:Hide()
+	end
 end
 
 function ns.InitOptions()
@@ -48,6 +64,11 @@ function ns.InitOptions()
 	AddCheckbox("enabled", L.ENABLE:format(ns.TITLE), L.ENABLE_TIP, true, function()
 		if not ns.db.enabled and ns.mainFrame then
 			ns.mainFrame:Hide()
+		end
+	end)
+	AddCheckbox("showMinimapButton", L.SHOW_MINIMAP, L.SHOW_MINIMAP_TIP, true, function()
+		if ns.UpdateMinimapButton then
+			ns.UpdateMinimapButton()
 		end
 	end)
 	AddCheckbox("showUnlearned", L.SHOW_UNLEARNED, L.SHOW_UNLEARNED_TIP, false, function()

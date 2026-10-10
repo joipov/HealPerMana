@@ -126,6 +126,7 @@ test("LoadDB fills defaults", function()
 	eq(db.sortKey, "hpm")
 	eq(db.sortAsc, false)
 	eq(db.showUnlearned, false)
+	eq(db.showMinimapButton, true)
 	eq(db.version, ns.DB_VERSION)
 end)
 
@@ -144,7 +145,7 @@ test("LoadDB migrates leftover planner keys", function()
 	eq(db.sortKey, "hpm")
 	eq(db.deficit, nil)
 	eq(db.showHUD, nil)
-	eq(db.version, 2)
+	eq(db.version, 3)
 end)
 
 -- HPM / sort ------------------------------------------------------------------

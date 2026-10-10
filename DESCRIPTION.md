@@ -6,11 +6,12 @@ For World of Warcraft: Forever (Classic Plus).
 
 `/hpm` opens and closes the list. Click a header to sort. Click a row and the `/cast` line for that rank is ready to copy. The addon does not open chat, and it does not look at your health bar.
 
-Unlearned ranks stay hidden unless you turn them on in settings. The addon compartment toggles the list. `/hpm settings` opens the options.
+Unlearned ranks stay hidden unless you turn them on in settings. The minimap button and the addon compartment open settings. `/hpm` opens and closes the list. `/hpm settings` opens the options.
 
 ## Settings
 
-Open with `/hpm settings`, or Esc > Options > AddOns > Heal Per Mana Table.
+Open with `/hpm settings`, the minimap button, the addon compartment, or Esc > Options > AddOns > Heal Per Mana Table.
 
 *   **Enable** — master switch. Off hides the list.
+*   **Minimap Button** — on by default. Opens these settings. Ellesmere places it with the other addon buttons.
 *   **Show unlearned ranks** — off by default. Grey rows for heal ranks that are not in your spellbook yet.

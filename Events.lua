@@ -46,6 +46,9 @@ function handlers.ADDON_LOADED(name)
 end
 
 function handlers.PLAYER_LOGIN()
+	if ns.CreateMinimapButton then
+		ns.CreateMinimapButton()
+	end
 	ns.InvalidateCache()
 	ns.Print("Type |cffffffff/hpm|r to toggle the list. |cffffffff/hpm settings|r opens settings.")
 end

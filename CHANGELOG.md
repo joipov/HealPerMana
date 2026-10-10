@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.1.3
+
+The minimap button is on by default. The addon compartment opens settings.
+
+### Changed
+
+- **Minimap Button** sits under Enable and starts on. Click opens settings. `/hpm` still toggles the list.
+- The button uses LibDBIcon when that library is loaded, and the same frame name when it is not, so the default minimap, the addon compartment, Ellesmere, and ElvUI can all show it.
+
 ## 1.1.2
 
 Heal, mana, cast, and rank come from the client each time the list is drawn.
