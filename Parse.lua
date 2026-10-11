@@ -23,6 +23,18 @@ function ns.ParseRankSubtext(text)
 	return nil
 end
 
+-- Penance pays mana once for the whole channel. "instantly and every X sec
+-- for Y sec" is the opening bolt plus one bolt each interval.
+local function ChannelBolts(text)
+	local every, dur = text:match("instantly and every (%d+) sec for (%d+) sec")
+	every = tonumber(every)
+	dur = tonumber(dur)
+	if every and dur and every > 0 then
+		return 1 + math.floor(dur / every)
+	end
+	return 1
+end
+
 -- Returns { kind, min, max, avg, duration } or nil.
 -- kind is "range", "hot", or "absorb".
 function ns.ParseHealText(text)
@@ -30,6 +42,22 @@ function ns.ParseHealText(text)
 		return nil
 	end
 	text = ns.StripInline(text)
+
+	-- Before the "N to N" match. Penance names the damage first
+	-- ("42 Holy damage to an enemy, or 126 healing to an ally").
+	local ally = text:match("(%d+)%s+healing to an ally")
+	if ally then
+		ally = tonumber(ally)
+		if ally then
+			local total = ally * ChannelBolts(text)
+			return {
+				kind = "range",
+				min = total,
+				max = total,
+				avg = total,
+			}
+		end
+	end
 
 	local minH, maxH = text:match("(%d+)%s+to%s+(%d+)")
 	if minH then

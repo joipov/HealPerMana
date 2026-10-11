@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.5
+
+Penance ranks are in the heal list.
+
+### Added
+
+- Penance ranks 1–4. The heal column is the full channel, three bolts for one mana cost.
+
 ## 1.1.4
 
 Settings use the same wording as the other Joipov addons.

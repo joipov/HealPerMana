@@ -1,7 +1,7 @@
 local _, ns = ...
 
 ns.TITLE = "Heal Per Mana Table"
-ns.VERSION = "1.1.4"
+ns.VERSION = "1.1.5"
 
 ns.KIND_DIRECT = "direct"
 ns.KIND_HOT = "hot"
@@ -57,6 +57,12 @@ ns.FAMILIES = {
 		key = "POWER_WORD_SHIELD",
 		name = "Power Word: Shield",
 		kind = ns.KIND_ABSORB,
+		core = false,
+	},
+	PENANCE = {
+		key = "PENANCE",
+		name = "Penance",
+		kind = ns.KIND_DIRECT,
 		core = false,
 	},
 }
@@ -122,6 +128,11 @@ local catalog = {
 	{ 10899, "POWER_WORD_SHIELD" },
 	{ 10900, "POWER_WORD_SHIELD" },
 	{ 10901, "POWER_WORD_SHIELD" },
+	-- Penance (player cast; not the hidden damage or heal triggers)
+	{ 402174, "PENANCE" },
+	{ 1240720, "PENANCE" },
+	{ 1240721, "PENANCE" },
+	{ 1316995, "PENANCE" },
 }
 
 ns.CATALOG = {}
