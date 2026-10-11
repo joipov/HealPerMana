@@ -31,6 +31,9 @@ files["tests/"] = {
 globals = {
 	"HealPerManaDB",
 	"HealPerMana_OnAddonCompartmentClick",
+	"HealPerMana_OnAddonCompartmentEnter",
+	"HealPerMana_OnAddonCompartmentLeave",
+	"HealPerManaFrame",
 	"SLASH_HPM1",
 	"SLASH_HPM2",
 	SlashCmdList = { fields = { "HPM" } },
@@ -57,5 +60,4 @@ read_globals = {
 	"Settings",
 	"UnitClass",
 	"UnitPower",
-	"HealPickDB",
 }

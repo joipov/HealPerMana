@@ -1,7 +1,6 @@
 local _, ns = ...
 
 ns.TITLE = "Heal Per Mana Table"
-ns.VERSION = "1.1.5"
 
 ns.KIND_DIRECT = "direct"
 ns.KIND_HOT = "hot"

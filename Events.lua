@@ -31,9 +31,6 @@ function handlers.ADDON_LOADED(name)
 		return
 	end
 	local saved = _G.HealPerManaDB
-	if type(saved) ~= "table" then
-		saved = _G.HealPickDB
-	end
 	_G.HealPerManaDB = ns.LoadDB(saved)
 	ns.db = _G.HealPerManaDB
 	eventFrame:UnregisterEvent("ADDON_LOADED")
