@@ -23,6 +23,7 @@
   ],
   "workspace.checkThirdParty": false,
   "diagnostics.globals": [
+    "C_AddOns",
     "HealPerManaDB",
     "HealPerMana_OnAddonCompartmentClick",
     "HealPerMana_OnAddonCompartmentEnter",

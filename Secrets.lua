@@ -1,4 +1,4 @@
-local _, ns = ...
+local ADDON_NAME, ns = ...
 
 -- Secret-value guards. Forever hands addons numbers and strings that look
 -- like normal Lua values but cannot be compared, added, or used as table
@@ -10,11 +10,22 @@ local issecrettable = issecrettable
 local canaccesstable = canaccesstable
 
 local function Chat(text)
-	print("|cffc4b5fdJoipov|r " .. ns.TITLE .. ": " .. tostring(text or ""))
+	print("|cff8b5cf6Joipov|r " .. ns.TITLE .. ": " .. tostring(text or ""))
 end
 
 function ns.Print(text)
 	Chat(text)
+end
+
+-- Login line. Name and version come from the TOC, so they never drift.
+function ns.Welcome()
+	local title = C_AddOns.GetAddOnMetadata(ADDON_NAME, "Title") or ns.TITLE
+	local version = C_AddOns.GetAddOnMetadata(ADDON_NAME, "Version") or "?"
+	print(string.format(
+		"|cff8b5cf6Joipov|r %s (|cff22d3eev%s|r). Type |cffffffff/hpm|r to toggle the list. |cffffffff/hpm settings|r opens settings.",
+		title,
+		version
+	))
 end
 
 local function JoinArgs(...)

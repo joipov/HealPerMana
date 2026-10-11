@@ -47,7 +47,7 @@ function handlers.PLAYER_LOGIN()
 		ns.CreateMinimapButton()
 	end
 	ns.InvalidateCache()
-	ns.Print("Type |cffffffff/hpm|r to toggle the list. |cffffffff/hpm settings|r opens settings.")
+	ns.Welcome()
 end
 
 function handlers.SPELLS_CHANGED()
