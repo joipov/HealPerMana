@@ -42,6 +42,9 @@ function ns.ParseHealText(text)
 		return nil
 	end
 	text = ns.StripInline(text)
+	-- The client may group digits ("1,966"). Drop the separators before matching.
+	text = text:gsub("(%d),(%d)", "%1%2")
+	text = text:gsub("(%d),(%d)", "%1%2")
 
 	-- Before the "N to N" match. Penance names the damage first
 	-- ("42 Holy damage to an enemy, or 126 healing to an ally"), and Holy Nova

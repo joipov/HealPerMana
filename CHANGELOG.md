@@ -1,14 +1,15 @@
 # Changelog
 
-## 1.2.0
+## 1.2.1
 
-Heal text parsing is more accurate for Renew, Power Word: Shield, and Holy Nova.
+Heal text parsing is more accurate for Renew, Power Word: Shield, Holy Nova, and grouped numbers.
 
 ### Fixed
 
 - **Renew** parses again: the heal text puts "damage" between the amount and "over", which the old pattern missed.
 - **Power Word: Shield** parses again: it absorbs, and the old pattern only matched "absorb" or "absorbs" with no suffix.
 - **Holy Nova** and Prayer of Healing use the group heal range, not the damage range that is named first.
+- Numbers with thousands separators (such as "1,966 to 2,195") are parsed correctly.
 
 ### Changed
 

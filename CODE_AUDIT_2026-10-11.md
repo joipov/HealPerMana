@@ -17,7 +17,7 @@ The absorb pattern `[Aa]bsorbs?` required a space right after "absorb". **Fixed*
 Renew reads "... of 45 damage over 15 sec", so `(%d+)%s+over` missed it. **Fixed** — `(%d+)%D-over%s+(%d+)`.
 
 ### B4 — Thousands separators
-Large numbers may be grouped ("1,966"). **Not changed** — it depends on the client's number formatting and needs an in-game check; the checklist below covers it.
+Large numbers may be grouped ("1,966"). **Fixed** — separators between digits are dropped before parsing, with a test. Confirm in game that high ranks read correctly.
 
 ### B5 — KnownInBook counted overrides
 `IsSpellInSpellBook(id, bank, true)` can report an override as known. **Reviewed, low risk** — left as-is; the ranks it feeds are cross-checked against the catalog.
