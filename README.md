@@ -1,4 +1,4 @@
-# Heal Per Mana
+# Heal Per Mana Table
 
 Priest heal-rank list. `/hpm` shows every known heal rank sorted by heal per mana. It does not read `UnitHealth`.
 

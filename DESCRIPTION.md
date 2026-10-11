@@ -1,4 +1,4 @@
-# Heal Per Mana
+# Heal Per Mana Table
 
 For World of Warcraft: Forever (Classic Plus).
 
