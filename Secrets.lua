@@ -78,14 +78,3 @@ function ns.IsPriest()
 	end
 	return token == "PRIEST"
 end
-
--- Current mana only when the client lets us read it. Combat on Forever
--- often returns a secret; callers must treat nil as "unknown", not 0.
-function ns.TryPlayerMana()
-	local manaType = Enum and Enum.PowerType and Enum.PowerType.Mana
-	if not manaType or not UnitPower then
-		return nil
-	end
-	local power = UnitPower("player", manaType)
-	return ns.ReadableNumber(power)
-end

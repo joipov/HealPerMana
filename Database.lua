@@ -1,12 +1,15 @@
 local _, ns = ...
 
--- SavedVariables: defaults, one-time migrations, load-time validation.
+-- Saved variables: defaults, one-time migrations, load-time validation.
 -- Plain Lua so tests/run.lua can exercise it without a client.
 
+local DB_VERSION = 4
+local MINIMAP_POS = 160
+
+-- Scalars only. Tables are built fresh in EnsureTables.
 local defaults = {
 	enabled = true,
 	showMinimapButton = true,
-	minimapAngle = 160,
 	showUnlearned = false,
 	debug = false,
 	sortKey = "hpm",
@@ -26,20 +29,8 @@ local allowedSort = {
 	hpm = true,
 }
 
--- Bump when a one-time migration is added to MigrateDB.
-local DB_VERSION = 3
-
-local function CopyDefaults(db)
-	for key, value in pairs(defaults) do
-		if type(db[key]) ~= type(value) then
-			db[key] = value
-		end
-	end
-	return db
-end
-
 local function ClampNumber(value, lo, hi, fallback)
-	if type(value) ~= "number" then
+	if type(value) ~= "number" or value ~= value then
 		return fallback
 	end
 	if value < lo then
@@ -51,17 +42,28 @@ local function ClampNumber(value, lo, hi, fallback)
 	return value
 end
 
+local function EnsureTables(db)
+	if type(db.minimapIcon) ~= "table" then
+		db.minimapIcon = {}
+	end
+	db.minimapIcon.minimapPos = ClampNumber(db.minimapIcon.minimapPos, 0, 360, MINIMAP_POS)
+end
+
+local function CopyDefaults(db)
+	for key, value in pairs(defaults) do
+		if type(db[key]) ~= type(value) then
+			db[key] = value
+		end
+	end
+	EnsureTables(db)
+end
+
 local function Validate(db)
 	if not allowedSort[db.sortKey] then
 		db.sortKey = defaults.sortKey
 	end
 	db.x = ClampNumber(db.x, -2000, 2000, 0)
 	db.y = ClampNumber(db.y, -2000, 2000, 0)
-	db.minimapAngle = ClampNumber(db.minimapAngle, -360, 360, defaults.minimapAngle)
-	db.showMinimapButton = db.showMinimapButton == true
-	if type(db.minimapIcon) ~= "table" then
-		db.minimapIcon = {}
-	end
 	if type(db.point) ~= "string" or db.point == "" then
 		db.point = defaults.point
 	end
@@ -92,17 +94,27 @@ local function MigrateDB(db)
 		-- The button starts on. Existing saves did not have the key.
 		db.showMinimapButton = true
 	end
+	if version < 4 then
+		-- The built-in button kept its own angle. LibDBIcon's table holds it now.
+		if type(db.minimapIcon) ~= "table" then
+			db.minimapIcon = {}
+		end
+		if type(db.minimapIcon.minimapPos) ~= "number" and type(db.minimapAngle) == "number" then
+			db.minimapIcon.minimapPos = db.minimapAngle % 360
+		end
+		db.minimapAngle = nil
+	end
 	db.version = DB_VERSION
 end
 
 function ns.LoadDB(saved)
-	local db = type(saved) == "table" and saved or {}
+	ns.firstRun = type(saved) ~= "table"
+	local db = ns.firstRun and {} or saved
 	MigrateDB(db)
 	CopyDefaults(db)
 	Validate(db)
 	return db
 end
 
-ns.DB_DEFAULTS = defaults
 ns.defaults = defaults
 ns.DB_VERSION = DB_VERSION

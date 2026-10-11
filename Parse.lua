@@ -44,7 +44,22 @@ function ns.ParseHealText(text)
 	text = ns.StripInline(text)
 
 	-- Before the "N to N" match. Penance names the damage first
-	-- ("42 Holy damage to an enemy, or 126 healing to an ally").
+	-- ("42 Holy damage to an enemy, or 126 healing to an ally"), and Holy Nova
+	-- and Prayer of Healing name their damage before the group heal.
+	local groupMin, groupMax = text:match("healing.-for%s+(%d+)%s+to%s+(%d+)")
+	if groupMin then
+		groupMin = tonumber(groupMin)
+		groupMax = tonumber(groupMax)
+		if groupMin and groupMax and groupMax >= groupMin then
+			return {
+				kind = "range",
+				min = groupMin,
+				max = groupMax,
+				avg = (groupMin + groupMax) / 2,
+			}
+		end
+	end
+
 	local ally = text:match("(%d+)%s+healing to an ally")
 	if ally then
 		ally = tonumber(ally)
@@ -73,7 +88,9 @@ function ns.ParseHealText(text)
 		end
 	end
 
-	local hot, duration = text:match("(%d+)%s+over%s+(%d+)")
+	-- Renew reads "Heals the target of 45 damage over 15 sec", so the number
+	-- is not always flush against "over".
+	local hot, duration = text:match("(%d+)%D-over%s+(%d+)")
 	if hot then
 		hot = tonumber(hot)
 		duration = tonumber(duration)
@@ -88,7 +105,7 @@ function ns.ParseHealText(text)
 		end
 	end
 
-	local absorb = text:match("[Aa]bsorbs?%s+(%d+)")
+	local absorb = text:match("[Aa]bsorb%a*%s+(%d+)")
 	if absorb then
 		absorb = tonumber(absorb)
 		if absorb then

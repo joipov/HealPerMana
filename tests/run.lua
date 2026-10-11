@@ -31,7 +31,6 @@ end
 
 load("Data.lua")
 load("Locales/enUS.lua")
-load("Locales.lua")
 load("Secrets.lua")
 load("Database.lua")
 load("Parse.lua")
@@ -153,7 +152,7 @@ test("LoadDB migrates leftover planner keys", function()
 	eq(db.sortKey, "hpm")
 	eq(db.deficit, nil)
 	eq(db.showHUD, nil)
-	eq(db.version, 3)
+	eq(db.version, ns.DB_VERSION)
 end)
 
 -- HPM / sort ------------------------------------------------------------------

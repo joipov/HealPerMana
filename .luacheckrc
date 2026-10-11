@@ -53,11 +53,12 @@ read_globals = {
 	"TooltipUtil",
 
 	"CreateFrame",
-	"GetLocale",
 	"PlaySound",
 	"SOUNDKIT",
 	"UIParent",
 	"Settings",
 	"UnitClass",
-	"UnitPower",
+	"GameTooltip",
+	"GetCursorPosition",
+	"Minimap",
 }

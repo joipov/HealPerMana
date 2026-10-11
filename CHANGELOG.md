@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.2.0
+
+Heal text parsing is more accurate for Renew, Power Word: Shield, and Holy Nova.
+
+### Fixed
+
+- **Renew** parses again: the heal text puts "damage" between the amount and "over", which the old pattern missed.
+- **Power Word: Shield** parses again: it absorbs, and the old pattern only matched "absorb" or "absorbs" with no suffix.
+- **Holy Nova** and Prayer of Healing use the group heal range, not the damage range that is named first.
+
+### Changed
+
+- The minimap position is stored in LibDBIcon's own table, so dragging the button with LibDBIcon keeps its place, and the built-in button uses the same value.
+- The addon loads only on the `forever` game type.
+
+### Removed
+
+- The unused locale loader (`Locales.lua`) and `ns.TryPlayerMana`.
+
 ## 1.1.5
 
 Penance ranks are in the heal list.
