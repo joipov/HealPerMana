@@ -1,5 +1,31 @@
 # Changelog
 
+## 1.2.4
+
+The minimap button tooltip is shorter.
+
+### Changed
+
+- The minimap button tooltip says the button opens settings.
+
+## 1.2.3
+
+The heal list is built once until your spells or a setting changes.
+
+### Changed
+
+- Opening the window again uses the list from the last scan.
+- The minimap button uses the same launcher as the other Joipov addons.
+
+## 1.2.2
+
+The login line shows the addon name and version. The Joipov name color is a brighter violet.
+
+### Changed
+
+- The login line reads Joipov <name> (v<version>). The name and version come from the TOC, so they never drift. The version is a different color.
+- Joipov is now a saturated violet.
+
 ## 1.2.1
 
 Heal text parsing is more accurate for Renew, Power Word: Shield, Holy Nova, and grouped numbers.
@@ -45,7 +71,7 @@ The minimap button is on by default. The addon compartment opens settings.
 ### Changed
 
 - **Minimap Button** sits under Enable and starts on. Click opens settings. `/hpm` still toggles the list.
-- The button uses LibDBIcon when that library is loaded, and the same frame name when it is not, so the default minimap, the addon compartment, Ellesmere, and ElvUI can all show it.
+- The button uses LibDBIcon when that library is loaded, and the same frame name when it is not, so the default minimap and the addon compartment can show it.
 
 ## 1.1.2
 

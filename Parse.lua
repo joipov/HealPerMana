@@ -137,8 +137,7 @@ function ns.ParseHealText(text)
 	return nil
 end
 
--- Concatenate tooltip left-text lines. Shared with the item scanner in
--- EllesmereUI QoL: C_TooltipInfo, never a GameTooltipTemplate.
+-- Concatenate tooltip left-text lines. Uses C_TooltipInfo, never a GameTooltipTemplate.
 local function TooltipLinesToText(data)
 	if not ns.CanIndex(data) or type(data.lines) ~= "table" then
 		return nil

@@ -1,15 +1,18 @@
 local _, ns = ...
 
--- Spellbook + catalog probe. Each scan reads the client. Nothing is reused.
+-- Spellbook + catalog probe. The list is kept until the spellbook or a setting changes.
 
 local C_Spell = C_Spell
 local C_SpellBook = C_SpellBook
 local Enum = Enum
 
 local familyNames = {}
+local cachedSpells
 
 function ns.InvalidateCache()
 	familyNames = {}
+	cachedSpells = nil
+	ns.spells = nil
 end
 
 local function FamilyName(family)
@@ -268,11 +271,15 @@ function ns.ScanSpells()
 	ScanSpellbook(list, byID)
 	ProbeCatalog(list, byID)
 	SortSpells(list)
+	cachedSpells = list
 	ns.spells = list
 	ns.Debug("scanned", #list, "ranks")
 	return list
 end
 
 function ns.GetSpells()
+	if cachedSpells then
+		return cachedSpells
+	end
 	return ns.ScanSpells()
 end
