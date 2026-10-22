@@ -44,6 +44,9 @@ function ns.InitOptions()
 
 	local function AddCheckbox(key, label, tooltip, default, onChanged)
 		if default == nil then
+			default = ns.defaults and ns.defaults[key]
+		end
+		if default == nil then
 			default = true
 		end
 		local setting = Settings.RegisterAddOnSetting(
@@ -62,17 +65,17 @@ function ns.InitOptions()
 		return checkbox, setting
 	end
 
-	local enabledCheckbox, enabledSetting = AddCheckbox("enabled", L.ENABLE:format(ns.TITLE), L.ENABLE_TIP, true, function()
+	local enabledCheckbox, enabledSetting = AddCheckbox("enabled", L.ENABLE:format(ns.TITLE), L.ENABLE_TIP, nil, function()
 		if not ns.db.enabled and ns.mainFrame then
 			ns.mainFrame:Hide()
 		end
 	end)
-	local minimapCheckbox = AddCheckbox("showMinimapButton", L.SHOW_MINIMAP, L.SHOW_MINIMAP_TIP, true, function()
+	AddCheckbox("showMinimapButton", L.SHOW_MINIMAP, L.SHOW_MINIMAP_TIP, nil, function()
 		if ns.UpdateMinimapButton then
 			ns.UpdateMinimapButton()
 		end
 	end)
-	local unlearnedCheckbox = AddCheckbox("showUnlearned", L.SHOW_UNLEARNED, L.SHOW_UNLEARNED_TIP, false, function()
+	local unlearnedCheckbox = AddCheckbox("showUnlearned", L.SHOW_UNLEARNED, L.SHOW_UNLEARNED_TIP, nil, function()
 		ns.InvalidateCache()
 		if ns.mainFrame and ns.mainFrame:IsShown() then
 			ns.RefreshUI()
@@ -82,7 +85,7 @@ function ns.InitOptions()
 	local function MasterEnabled()
 		return enabledSetting:GetValue()
 	end
-	minimapCheckbox:SetParentInitializer(enabledCheckbox, MasterEnabled)
+	-- The Minimap button row stays live while the addon is off (house style).
 	unlearnedCheckbox:SetParentInitializer(enabledCheckbox, MasterEnabled)
 
 	Settings.RegisterAddOnCategory(category)

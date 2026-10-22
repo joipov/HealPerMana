@@ -102,7 +102,12 @@ local function ReadMana(spellID)
 	if not (C_Spell and C_Spell.GetSpellPowerCost) then
 		return nil
 	end
-	local costs = C_Spell.GetSpellPowerCost(spellID)
+	-- The entry fields can be secret in combat; read the list as one call,
+	-- as Spell Resources does.
+	local ok, costs = pcall(C_Spell.GetSpellPowerCost, spellID)
+	if not ok then
+		return nil
+	end
 	if type(costs) ~= "table" or not ns.CanIndex(costs) then
 		return nil
 	end

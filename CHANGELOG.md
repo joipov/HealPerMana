@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.2.5
+
+A hidden mana cost can no longer stop the heal list scan.
+
+### Fixed
+
+- Reading a spell's mana cost is guarded the same way as in Spell Resources, so a cost that is hidden in combat is skipped instead of stopping the scan.
+
+### Changed
+
+- **Minimap button** stays active while the addon is off.
+
 ## 1.2.4
 
 The minimap button tooltip is shorter.
