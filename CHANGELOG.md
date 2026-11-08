@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.6
+
+Re-checked against the current Forever client; no code change was needed.
+
+### Changed
+
+- Verified against Forever client 1.60.1.70862.
+
 ## 1.2.5
 
 A hidden mana cost can no longer stop the heal list scan.

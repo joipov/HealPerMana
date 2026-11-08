@@ -1,11 +1,19 @@
 # Heal Per Mana Table audit
 
-Target: World of Warcraft Forever, `## Interface: 16001` (client 1.60.1.70425), Lua 5.1.
+Target: World of Warcraft Forever, `## Interface: 16001` (client 1.60.1.70862), Lua 5.1.
 Compared 2026-10-21 against ResourceEfficiencyTooltips 0.2.1 (2026-10-18) for
 the shared inputs (`C_Spell.GetSpellPowerCost`, tooltip heal text) and
 WhatsTraining 11.0.0-beta23 (2026-10-21) for spellbook scanning patterns.
+Re-checked against client 1.60.1.70862 on 2026-11-08.
 
 This note is for development. It is not shipped in the addon zip.
+
+## What changed in 1.2.6
+
+- Re-checked the spellbook scan and the guarded mana-cost read against
+  client 1.60.1.70862. `C_SpellBook.GetSpellBookItemType`,
+  `C_SpellBook.GetSpellBookItemInfo`, and `C_Spell.GetSpellPowerCost` keep
+  their shapes. No code change.
 
 ## What changed in 1.2.5
 
