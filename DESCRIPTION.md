@@ -2,11 +2,11 @@
 
 For World of Warcraft: Forever (Classic Plus).
 
-**A priest heal list, sorted by heal per mana.** One row per rank you know: spell, rank, cast time, mana, heal, and heal per mana. The best heal for the mana sits at the top until you sort another column.
+**A heal list for every class, sorted by heal per mana.** One row per rank: spell, rank, cast time, mana, heal, and heal per mana. The best heal for the mana sits at the top until you sort another column.
 
 `/hpm` opens and closes the list. Click a header to sort. Click a row and the `/cast` line for that rank is ready to copy. The addon does not open chat, and it does not look at your health bar.
 
-Unlearned ranks stay hidden unless you turn them on in settings. The minimap button and the addon compartment open settings. `/hpm` opens and closes the list. `/hpm settings` opens the options.
+Unlearned ranks stay hidden unless you turn them on in settings. Those rows are for the class you are logged in as. The minimap button and the addon compartment open settings. `/hpm` opens and closes the list. `/hpm settings` opens the options.
 
 ## Settings
 

@@ -106,6 +106,11 @@ _G.SlashCmdList.HPM = function(msg)
 					local s = spells[i]
 					ns.Debug(s.id, s.name, s.rank, s.mana, s.castSec, s.healMin, s.healMax, s.source, s.known, ns.HealPerMana(s))
 				end
+				local missed = ns.unparsed or {}
+				ns.Debug("unparsed", #missed)
+				for i = 1, #missed do
+					ns.Debug("unparsed", missed[i].id, missed[i].name)
+				end
 			end
 		end
 		return

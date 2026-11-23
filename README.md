@@ -1,14 +1,15 @@
 # Heal Per Mana Table
 
-Priest heal-rank list. `/hpm` shows every known heal rank sorted by heal per mana. It does not read `UnitHealth`.
+Heal-rank list for every class. `/hpm` shows each mana heal and absorb sorted by heal per mana. It does not read `UnitHealth`.
 
 Target client: World of Warcraft **Forever**, release client (`_forever_`, `## Interface: 16001`). The old Forever beta (`_classic_beta_`) uses the same TOC and game type.
 
 ## Features
 
-- One row per known heal rank: spell, rank, cast time, mana, heal, and heal per mana.
+- One row per heal rank: spell, rank, cast time, mana, heal, and heal per mana. Learned spells come from the spellbook, on any class.
+- A row is a spell whose tooltip states a heal or an absorb and whose cost is mana. Party heals stay one target. A stated bolt count, jump count, or chain falloff is added in.
 - Click a column header to sort. Click a row to fill a `/cast` macro for that rank (Ctrl+C). The addon never opens chat.
-- Unlearned ranks can be shown from settings. They stay out of the list by default.
+- Unlearned ranks can be shown from settings, for the class you are logged in as. They stay out of the list by default.
 - The addon compartment, the minimap button, and `/hpm settings` open settings. `/hpm` toggles the list.
 
 ## Commands
@@ -26,7 +27,7 @@ Loaded in TOC order; modules communicate only through the shared `ns` table.
 
 | File | Concern |
 | --- | --- |
-| `Data.lua` | Families and spell IDs |
+| `Data.lua` | Class spell IDs |
 | `Locales/enUS.lua` | UI strings |
 | `Secrets.lua` | Secret-value guards, chat |
 | `Database.lua` | SavedVariables defaults, migrations, validation |

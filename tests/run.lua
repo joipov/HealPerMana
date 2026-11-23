@@ -118,6 +118,76 @@ test("ParseHealText Penance is three bolts", function()
 	eq(p.avg, 1275)
 end)
 
+test("ParseHealText Holy Nova uses the heal, not the damage", function()
+	local p = ns.ParseHealText("Causes an explosion of holy light around the caster, causing 139 to 159 Holy damage to all enemy targets within 10 yards and healing all party members within 10 yards for 225 to 259.")
+	eq(p.min, 225)
+	eq(p.max, 259)
+end)
+
+test("ParseHealText direct heal plus trailing HoT", function()
+	local p = ns.ParseHealText("Heals a friendly target for 965 to 1,077 and another 994 over 21 sec.")
+	eq(p.min, 1959)
+	eq(p.max, 2071)
+	near(p.avg, (1959 + 2071) / 2)
+end)
+
+test("ParseHealText additional HoT is part of the cast", function()
+	local p = ns.ParseHealText("Heals a friendly target for 799 to 883, an additional 805 over 15 sec, and increases the effectiveness of your Chain Heal casts directly on that target by 25%.")
+	eq(p.min, 1604)
+	eq(p.max, 1688)
+end)
+
+test("ParseHealText Holy Binding heals two targets", function()
+	local p = ns.ParseHealText("Heal yourself and a friendly target for 295 to 353. This causes low threat.")
+	eq(p.min, 590)
+	eq(p.max, 706)
+end)
+
+test("ParseHealText Chain Heal adds the falloff", function()
+	local p = ns.ParseHealText("Heals the friendly target for 245 to 281, then jumps to heal additional nearby targets. Each jump is 50% as effective as the previous target. Heals 3 total targets.")
+	near(p.min, 245 * 1.75)
+	near(p.max, 281 * 1.75)
+end)
+
+test("ParseHealText channel ticks over the stated duration", function()
+	local p = ns.ParseHealText("Heals all nearby allies for 90 every 2 sec over 10 sec.")
+	eq(p.min, 450)
+	eq(p.max, 450)
+end)
+
+test("ParseHealText Mend Pet is the channel total", function()
+	local p = ns.ParseHealText("Heals your pet 245 health every second while you focus. Lasts 5 sec.")
+	eq(p.min, 1225)
+	eq(p.max, 1225)
+end)
+
+test("ParseHealText absorb plus HoT", function()
+	local p = ns.ParseHealText("Place a Holy ward on an ally for 30 sec. The next time this ally takes damage dropping their Health below 35%, they will gain a shield absorbing 155 damage and begin healing for 125 Health over 15 sec.")
+	eq(p.min, 280)
+	eq(p.max, 280)
+end)
+
+test("ParseHealText percent of health is not a flat heal", function()
+	eq(ns.ParseHealText("Instantly heals the caster for 10% of their maximum health."), nil)
+	eq(ns.ParseHealText("Heals a friendly target for an amount equal to the Paladin's maximum health and restores 550 of their mana."), nil)
+end)
+
+test("ParseHealText resurrection is not a living heal", function()
+	eq(ns.ParseHealText("Returns the spirit to the body, restoring a dead target to life with 2200 health and 2800 mana."), nil)
+end)
+
+test("ParseHealText Prayer of Mending is every jump", function()
+	local p = ns.ParseHealText("Places a spell on the target that heals them for 413 the next time they take damage. Jumps up to 5 times and lasts 30 sec after each jump.")
+	eq(p.min, 2065)
+	eq(p.max, 2065)
+end)
+
+test("ParseHealText shield wording absorbs the stated maximum", function()
+	local p = ns.ParseHealText("Wraps an ally in a shield that lasts up to 30 sec., absorbing a maximum of 480 Physical or magical damage.")
+	eq(p.kind, "absorb")
+	eq(p.avg, 480)
+end)
+
 test("ParseHealText rejects empty", function()
 	eq(ns.ParseHealText(""), nil)
 	eq(ns.ParseHealText(nil), nil)
@@ -138,8 +208,25 @@ test("ReadableNumber and ReadableString", function()
 	eq(ns.ReadableString(""), nil)
 end)
 
-test("IsPriest when UnitClass is readable", function()
-	eq(ns.IsPriest(), true)
+test("PlayerClassToken reads the class token", function()
+	eq(ns.PlayerClassToken(), "PRIEST")
+end)
+
+test("Catalog ids are unique and class tagged", function()
+	local classes = {
+		PRIEST = true, DRUID = true, PALADIN = true, SHAMAN = true,
+		WARLOCK = true, MAGE = true,
+	}
+	local seen = {}
+	eq(#ns.CATALOG > 0, true, "catalog")
+	for i = 1, #ns.CATALOG do
+		local entry = ns.CATALOG[i]
+		eq(type(entry.id), "number", "id")
+		eq(classes[entry.class], true, entry.class)
+		eq(seen[entry.id], nil, "duplicate")
+		seen[entry.id] = true
+		eq(ns.CATALOG_BY_ID[entry.id], entry, "by id")
+	end
 end)
 
 -- Database --------------------------------------------------------------------

@@ -255,15 +255,6 @@ function ns.RefreshUI()
 	if not frame or not ns.db then
 		return
 	end
-	local priest = ns.IsPriest()
-	if priest == false then
-		widgets.gate:Show()
-		widgets.body:Hide()
-		widgets.gateText:SetText(ns.L.PRIEST_ONLY)
-		return
-	end
-	widgets.gate:Hide()
-	widgets.body:Show()
 	local spells = ns.GetSpells()
 	if #spells == 0 then
 		widgets.empty:Show()
@@ -320,18 +311,6 @@ function ns.CreateMainFrame()
 		frame:Hide()
 		ClickSound()
 	end)
-
-	local gate = CreateFrame("Frame", nil, frame)
-	gate:SetPoint("TOPLEFT", 0, -32)
-	gate:SetPoint("BOTTOMRIGHT")
-	gate:Hide()
-	local gateText = Font(gate, 13)
-	gateText:SetPoint("CENTER", 0, 20)
-	gateText:SetWidth(360)
-	gateText:SetJustifyH("CENTER")
-	Color(gateText, MUTED)
-	widgets.gate = gate
-	widgets.gateText = gateText
 
 	local body = CreateFrame("Frame", nil, frame)
 	body:SetPoint("TOPLEFT", 12, -40)

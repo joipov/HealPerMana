@@ -75,17 +75,9 @@ function ns.CanIndex(value)
 	return true
 end
 
--- UnitClass token ("PRIEST") or nil when secret / missing. nil means
--- "unknown", not "not a priest" — the scanner still runs in that case.
+-- UnitClass token ("PRIEST") or nil when secret / missing. nil means the
+-- class is unknown, so unlearned ranks stay hidden. The spellbook still scans.
 function ns.PlayerClassToken()
 	local token = select(2, UnitClass("player"))
 	return ns.ReadableString(token)
-end
-
-function ns.IsPriest()
-	local token = ns.PlayerClassToken()
-	if not token then
-		return nil
-	end
-	return token == "PRIEST"
 end

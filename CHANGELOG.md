@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.3.0
+
+Every class can open the heal list. A rank is kept when the client tooltip states a heal or an absorb and the spell costs mana.
+
+### Added
+
+- Learned mana heals and absorbs from the spellbook, on any class.
+- Tooltip totals for a direct heal plus its heal over time, a two-target heal, chain falloff, a channel, and an absorb plus a heal.
+- `/hpm debug` lists spellbook spells that mention healing or absorbing but did not parse.
+
+### Changed
+
+- The window opens on every class.
+- Unlearned ranks stay limited to the class you are logged in as.
+- Spell IDs added from the Forever client are only ids. Heal, mana, and cast still come from the client at scan time.
+
+### Removed
+
+- The priest-only message.
+
 ## 1.2.6
 
 Re-checked against the current Forever client; no code change was needed.

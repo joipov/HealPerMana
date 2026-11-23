@@ -1,7 +1,6 @@
 local _, ns = ...
 
 ns.L = {
-	PRIEST_ONLY = "Heal Per Mana Table is for Priests. Open it on a priest to compare heal ranks.",
 	NO_SPELLS = "No healing ranks found. Open your spellbook, then /reload.",
 	COL_SPELL = "Spell",
 	COL_RANK = "Rank",
