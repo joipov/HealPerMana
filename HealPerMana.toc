@@ -2,7 +2,7 @@
 ## Title: Heal Per Mana Table
 ## Notes: Heal ranks sorted by heal per mana.
 ## Author: Joipov
-## Version: 1.3.0
+## Version: 1.3.3
 ## Category: |cff8b5cf6Joipov|r Tools
 ## IconTexture: Interface\Icons\Spell_Holy_Heal
 ## SavedVariables: HealPerManaDB
@@ -25,4 +25,5 @@ Scanner.lua
 Recommender.lua
 UI.lua
 Events.lua
+Profile.lua
 Options.lua

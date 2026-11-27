@@ -15,3 +15,4 @@ Open with `/hpm settings`, the minimap button, the addon compartment, or Esc > O
 *   **Enable** — master switch. Off hides the list.
 *   **Minimap button** — on by default. Opens these settings.
 *   **Show unlearned ranks** — off by default. Grey rows for heal ranks that are not in your spellbook yet.
+*   **X / Y** — pixel offsets for the list window. The same boxes sit on the title bar.

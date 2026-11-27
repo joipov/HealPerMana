@@ -10,7 +10,7 @@ Target client: World of Warcraft **Forever**, release client (`_forever_`, `## I
 - A row is a spell whose tooltip states a heal or an absorb and whose cost is mana. Party heals stay one target. A stated bolt count, jump count, or chain falloff is added in.
 - Click a column header to sort. Click a row to fill a `/cast` macro for that rank (Ctrl+C). The addon never opens chat.
 - Unlearned ranks can be shown from settings, for the class you are logged in as. They stay out of the list by default.
-- The addon compartment, the minimap button, and `/hpm settings` open settings. `/hpm` toggles the list.
+- The addon compartment, the minimap button, and `/hpm settings` open settings. `/hpm` toggles the list. Type **X** and **Y** on the title bar or in settings for pixel placement.
 
 ## Commands
 

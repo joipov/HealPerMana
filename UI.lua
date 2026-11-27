@@ -23,6 +23,8 @@ local COLS = {
 local frame
 local widgets = {}
 local rows = {}
+local coordBar
+local applyingCoords = false
 
 local function Color(fs, c)
 	fs:SetTextColor(c[1], c[2], c[3])
@@ -99,6 +101,85 @@ local function FormatHPM(spell)
 	return string.format("%.2f", hpm)
 end
 
+local function Pixel(value, fallback)
+	value = tonumber(value)
+	if type(value) ~= "number" or value ~= value then
+		return fallback
+	end
+	value = math.floor(value + 0.5)
+	if value < -2000 then
+		return -2000
+	end
+	if value > 2000 then
+		return 2000
+	end
+	return value
+end
+
+local function BoxHasFocus()
+	if not coordBar then
+		return false
+	end
+	return (coordBar.xBox and coordBar.xBox:HasFocus()) or (coordBar.yBox and coordBar.yBox:HasFocus())
+end
+
+local function PaintCoordBar()
+	local db = ns.db
+	if not db or not coordBar or BoxHasFocus() then
+		return
+	end
+	local x, y = db.x, db.y
+	if frame and frame.IsMoving and frame:IsMoving() then
+		local _, _, _, fx, fy = frame:GetPoint(1)
+		if type(fx) == "number" then
+			x = fx
+		end
+		if type(fy) == "number" then
+			y = fy
+		end
+	end
+	coordBar.xBox:SetText(tostring(Pixel(x, 0)))
+	coordBar.yBox:SetText(tostring(Pixel(y, 0)))
+end
+
+local function SyncCoordSettings()
+	local db = ns.db
+	if not db or applyingCoords then
+		return
+	end
+	applyingCoords = true
+	if ns.xSetting then
+		ns.xSetting:SetValue(db.x)
+	end
+	if ns.ySetting then
+		ns.ySetting:SetValue(db.y)
+	end
+	applyingCoords = false
+end
+
+function ns.ApplyPosition()
+	local db = ns.db
+	if not db or not frame then
+		return
+	end
+	db.x = Pixel(db.x, 0)
+	db.y = Pixel(db.y, 0)
+	frame:ClearAllPoints()
+	frame:SetPoint(db.point or "CENTER", UIParent, db.relPoint or "CENTER", db.x, db.y)
+	PaintCoordBar()
+end
+
+local function CommitCoordBar()
+	local db = ns.db
+	if not db or not coordBar then
+		return
+	end
+	db.x = Pixel(coordBar.xBox:GetText(), db.x)
+	db.y = Pixel(coordBar.yBox:GetText(), db.y)
+	ns.ApplyPosition()
+	SyncCoordSettings()
+end
+
 local function SavePosition()
 	local db = ns.db
 	if not db or not frame then
@@ -106,7 +187,9 @@ local function SavePosition()
 	end
 	local point, _, relPoint, x, y = frame:GetPoint(1)
 	if point then
-		db.point, db.relPoint, db.x, db.y = point, relPoint, x, y
+		db.point, db.relPoint, db.x, db.y = point, relPoint, Pixel(x, db.x), Pixel(y, db.y)
+		PaintCoordBar()
+		SyncCoordSettings()
 	end
 end
 
@@ -290,8 +373,12 @@ function ns.CreateMainFrame()
 	Solid(titleBar, 0.10, 0.09, 0.08, 1):SetAllPoints()
 	titleBar:EnableMouse(true)
 	titleBar:RegisterForDrag("LeftButton")
-	titleBar:SetScript("OnDragStart", function() frame:StartMoving() end)
+	titleBar:SetScript("OnDragStart", function()
+		frame:StartMoving()
+		frame:SetScript("OnUpdate", PaintCoordBar)
+	end)
 	titleBar:SetScript("OnDragStop", function()
+		frame:SetScript("OnUpdate", nil)
 		frame:StopMovingOrSizing()
 		SavePosition()
 	end)
@@ -311,6 +398,52 @@ function ns.CreateMainFrame()
 		frame:Hide()
 		ClickSound()
 	end)
+
+	coordBar = CreateFrame("Frame", nil, titleBar)
+	coordBar:SetSize(168, 18)
+	coordBar:SetPoint("RIGHT", close, "LEFT", -8, 0)
+	coordBar:EnableMouse(true)
+	local function MakeCoordBox(labelText)
+		local label = Font(coordBar, 10)
+		label:SetText(labelText)
+		Color(label, MUTED)
+		local box = CreateFrame("EditBox", nil, coordBar)
+		box:SetSize(52, 16)
+		box:SetAutoFocus(false)
+		box:SetMaxLetters(7)
+		box:SetFont("Fonts\\FRIZQT__.TTF", 11, "")
+		box:SetJustifyH("CENTER")
+		box:SetTextInsets(2, 2, 0, 0)
+		box:SetTextColor(TEXT[1], TEXT[2], TEXT[3])
+		local bg = Solid(box, 0, 0, 0, 0.65)
+		bg:SetAllPoints()
+		box:SetScript("OnEnterPressed", function(self)
+			CommitCoordBar()
+			self:ClearFocus()
+		end)
+		box:SetScript("OnEscapePressed", function(self)
+			self.reverting = true
+			self:ClearFocus()
+			self.reverting = false
+			PaintCoordBar()
+		end)
+		box:SetScript("OnEditFocusLost", function(self)
+			if self.reverting then
+				return
+			end
+			CommitCoordBar()
+		end)
+		return label, box
+	end
+	local xLabel, xBox = MakeCoordBox("X")
+	local yLabel, yBox = MakeCoordBox("Y")
+	xLabel:SetPoint("LEFT", coordBar, "LEFT", 0, 0)
+	xBox:SetPoint("LEFT", xLabel, "RIGHT", 4, 0)
+	yLabel:SetPoint("LEFT", xBox, "RIGHT", 8, 0)
+	yBox:SetPoint("LEFT", yLabel, "RIGHT", 4, 0)
+	coordBar.xBox = xBox
+	coordBar.yBox = yBox
+	PaintCoordBar()
 
 	local body = CreateFrame("Frame", nil, frame)
 	body:SetPoint("TOPLEFT", 12, -40)

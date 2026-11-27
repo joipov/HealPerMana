@@ -62,8 +62,8 @@ local function Validate(db)
 	if not allowedSort[db.sortKey] then
 		db.sortKey = defaults.sortKey
 	end
-	db.x = ClampNumber(db.x, -2000, 2000, 0)
-	db.y = ClampNumber(db.y, -2000, 2000, 0)
+	db.x = math.floor(ClampNumber(db.x, -2000, 2000, 0) + 0.5)
+	db.y = math.floor(ClampNumber(db.y, -2000, 2000, 0) + 0.5)
 	if type(db.point) ~= "string" or db.point == "" then
 		db.point = defaults.point
 	end

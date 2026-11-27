@@ -65,16 +65,26 @@ function ns.InitOptions()
 		return checkbox, setting
 	end
 
-	local enabledCheckbox, enabledSetting = AddCheckbox("enabled", L.ENABLE:format(ns.TITLE), L.ENABLE_TIP, nil, function()
+	local _, enabledSetting = AddCheckbox("enabled", L.ENABLE:format(ns.TITLE), L.ENABLE_TIP, nil, function()
 		if not ns.db.enabled and ns.mainFrame then
 			ns.mainFrame:Hide()
 		end
 	end)
-	AddCheckbox("showMinimapButton", L.SHOW_MINIMAP, L.SHOW_MINIMAP_TIP, nil, function()
-		if ns.UpdateMinimapButton then
-			ns.UpdateMinimapButton()
+
+	local function GateOn(initializer)
+		if not initializer then
+			return
 		end
-	end)
+		if initializer.AddModifyPredicate then
+			initializer:AddModifyPredicate(function()
+				return enabledSetting:GetValue()
+			end)
+		end
+		if initializer.AddEvaluateStateCVar then
+			initializer:AddEvaluateStateCVar("HPM_ENABLED")
+		end
+	end
+
 	local unlearnedCheckbox = AddCheckbox("showUnlearned", L.SHOW_UNLEARNED, L.SHOW_UNLEARNED_TIP, nil, function()
 		ns.InvalidateCache()
 		if ns.mainFrame and ns.mainFrame:IsShown() then
@@ -82,11 +92,116 @@ function ns.InitOptions()
 		end
 	end)
 
-	local function MasterEnabled()
-		return enabledSetting:GetValue()
+	local function AddPixelSetting(key, label, tooltip, lo, hi)
+		local setting = Settings.RegisterAddOnSetting(
+			category,
+			"HPM_" .. key:upper(),
+			key,
+			ns.db,
+			Settings.VarType.Number,
+			label,
+			ns.defaults[key]
+		)
+		setting:SetValueChangedCallback(function()
+			local n = tonumber(ns.db[key]) or ns.defaults[key]
+			n = math.floor(n + 0.5)
+			if n < lo then
+				n = lo
+			elseif n > hi then
+				n = hi
+			end
+			ns.db[key] = n
+			if ns.ApplyPosition then
+				ns.ApplyPosition()
+			end
+		end)
+		local control
+		local initializer
+		if Settings.CreateElementInitializer then
+			initializer = Settings.CreateElementInitializer("SettingsListElementTemplate", {
+				name = label,
+				tooltipText = tooltip,
+			})
+		end
+		if initializer and initializer.InitFrame then
+			local origInit = initializer.InitFrame
+			function initializer:InitFrame(frame)
+				origInit(self, frame)
+				local box = frame.pixelBox
+				if not box then
+					box = CreateFrame("EditBox", nil, frame, "InputBoxTemplate")
+					box:SetAutoFocus(false)
+					box:SetSize(70, 20)
+					box:SetMaxLetters(7)
+					box:SetPoint("RIGHT", frame, "RIGHT", -16, 0)
+					box:SetFontObject(GameFontHighlightSmall)
+					box:SetJustifyH("CENTER")
+					local function Commit()
+						local n = tonumber(box:GetText())
+						if type(n) == "number" and n == n then
+							n = math.floor(n + 0.5)
+							if n < lo then
+								n = lo
+							elseif n > hi then
+								n = hi
+							end
+							setting:SetValue(n)
+						else
+							box:SetText(tostring(ns.db[key]))
+						end
+					end
+					box:SetScript("OnEnterPressed", function()
+						Commit()
+						box:ClearFocus()
+					end)
+					box:SetScript("OnEscapePressed", function()
+						box.reverting = true
+						box:SetText(tostring(ns.db[key]))
+						box:ClearFocus()
+						box.reverting = false
+					end)
+					box:SetScript("OnEditFocusLost", function()
+						if box.reverting then
+							return
+						end
+						Commit()
+					end)
+					frame.pixelBox = box
+				end
+				if not box:HasFocus() then
+					box:SetText(tostring(ns.db[key]))
+				end
+			end
+			SettingsPanel:GetLayout(category):AddInitializer(initializer)
+			control = initializer
+		elseif Settings.CreateSliderOptions and Settings.CreateSlider then
+			local options = Settings.CreateSliderOptions(lo, hi, 1)
+			if MinimalSliderWithSteppersMixin and MinimalSliderWithSteppersMixin.Label then
+				options:SetLabelFormatter(MinimalSliderWithSteppersMixin.Label.Right, function(value)
+					return string.format("%.0f", value)
+				end)
+			end
+			control = Settings.CreateSlider(category, setting, options, tooltip)
+		end
+		return control, setting
 	end
-	-- The Minimap button row stays live while the addon is off (house style).
-	unlearnedCheckbox:SetParentInitializer(enabledCheckbox, MasterEnabled)
+
+	local xControl, xSetting = AddPixelSetting("x", L.POS_X, L.POS_X_TIP, -2000, 2000)
+	local yControl, ySetting = AddPixelSetting("y", L.POS_Y, L.POS_Y_TIP, -2000, 2000)
+	ns.xSetting = xSetting
+	ns.ySetting = ySetting
+
+	GateOn(unlearnedCheckbox)
+	GateOn(xControl)
+	GateOn(yControl)
+
+	AddCheckbox("showMinimapButton", L.SHOW_MINIMAP, L.SHOW_MINIMAP_TIP, nil, function()
+		if ns.UpdateMinimapButton then
+			ns.UpdateMinimapButton()
+		end
+	end)
+
+	ns.AddProfileShareButtons(category)
 
 	Settings.RegisterAddOnCategory(category)
 end

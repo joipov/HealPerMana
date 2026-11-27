@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.3.3
+
+Settings and the window position can be copied as a string and pasted on another character or computer.
+
+### Added
+
+- **Export profile** and **Import profile** in settings. Import reloads the UI.
+
+## 1.3.2
+
+Settings no longer indent Unlearned, X, and Y under the minimap button.
+
+### Changed
+
+- Feature rows grey out when the addon is off. They stay full-width. The minimap button is last and stays clickable.
+
+## 1.3.1
+
+The list window can be placed by typing X and Y, on the title bar and in settings.
+
+### Added
+
+- **X** and **Y** pixel offsets in settings, and the same boxes on the window. Dragging the title bar updates them. Values are whole pixels.
+
 ## 1.3.0
 
 Every class can open the heal list. A rank is kept when the client tooltip states a heal or an absorb and the spell costs mana.

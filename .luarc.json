@@ -46,6 +46,9 @@
     "SOUNDKIT",
     "UIParent",
     "Settings",
+    "SettingsPanel",
+    "MinimalSliderWithSteppersMixin",
+    "GameFontHighlightSmall",
     "UnitClass",
     "UnitPower"
   ],
